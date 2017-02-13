@@ -1,5 +1,5 @@
 from flask import Flask
-from models import db
+from models.connection import db
 
 # Inicializacion del objeto Flask
 app = Flask(__name__)
