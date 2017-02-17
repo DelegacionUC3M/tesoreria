@@ -1,5 +1,4 @@
 from .connection import db
-from models import Invoice
 
 class Expense(db.Model):
 
@@ -14,12 +13,11 @@ class Expense(db.Model):
     rate = db.Column(db.Integer, Nullable=False)
     revoked = db.Column(db.Boolean, Nullable=False)
     invoices = db.relationship('Invoice', backref='expense',
-                            lazy='dynamic', Nullable=False)
+                            lazy='dynamic')
     observations = db.Column(db.Text, Nullable=False)
 
-def __init__(self, id, name=None, school=None, expense_date=None, register_date=None, add_date=None, amount=None, revoked=False, invoices=None, observations):
+def __init__(self, name=None, school=None, expense_date=None, register_date=None, add_date=None, amount=None, revoked=False, invoices=[], observations=None):
 
-    self.id = id
     self.name = name
     self.school = school
     self.expense_date = expense_date
