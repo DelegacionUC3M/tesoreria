@@ -5,19 +5,19 @@ class Expense(db.Model):
 
     id = db.Column(db.Integer, db.ForeignKey('BudgetHeading.id'), primary_key=True, autoincrement=1)
     budgetheading_id = db.Column(db.Integer, db.ForeignKey('budgetheading.id'))
-    name = db.Column(db.String(255))
-    school = db.Column(db.Integer)
-    expense_date = db.Column(db.DateTime)
-    register_date = db.Column(db.DateTime)
-    add_date = db.Column(db.DateTime)
-    amount = db.Column(db.Integer)
-    rate = db.Column(db.Integer)
-    revoked = db.Column(db.Boolean)
+    name = db.Column(db.String(255), Nullable=False)
+    school = db.Column(db.Integer, Nullable=False)
+    expense_date = db.Column(db.DateTime, Nullable=False)
+    register_date = db.Column(db.DateTime, Nullable=False)
+    add_date = db.Column(db.DateTime, Nullable=False)
+    amount = db.Column(db.Integer, Nullable=False)
+    rate = db.Column(db.Integer, Nullable=False)
+    revoked = db.Column(db.Boolean, Nullable=False)
     invoices = db.relationship('Invoice', backref='expense',
-                            lazy='dynamic')
-    observations = db.Column(db.Text)
+                            lazy='dynamic', Nullable=False)
+    observations = db.Column(db.Text, Nullable=False)
 
-def __init__(self, id, name, school, expense_date, register_date, add_date, amount, revoked, invoices, observations):
+def __init__(self, id, name=None, school=None, expense_date=None, register_date=None, add_date=None, amount=None, revoked=False, invoices=None, observations):
 
     self.id = id
     self.name = name
