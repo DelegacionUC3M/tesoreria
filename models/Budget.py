@@ -6,7 +6,7 @@ class Budget(db.Model):
     school=db.Column(db.Integer,nullable=False)
     visibility=db.Column(db.Boolean, nullable=False)
     public=db.Column(db.Boolean,nullable=False)
-    budget_headings=db.relationship('BudgetHeading', backref='Budget', lazy= 'dynamic')
+    budget_headings=db.relationship('BudgetHeading', backref='budget', lazy= 'dynamic')
 
     def __init__(self, name=None, school=None, visibility=False, public=False, budget_headings=[]):
         self.name = name
