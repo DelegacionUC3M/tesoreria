@@ -29,7 +29,7 @@ class Expense(db.Model):
         self.invoices = invoices
         self.observations = observations
     def __repr__(self):
-        return{
+        return str({
             'id': self.id,
             'name': self.name,
             'school': self.school,
@@ -41,4 +41,4 @@ class Expense(db.Model):
             'revoked': self.revoked,
             'invoices': self.invoices,
             'observations': self.observations
-        }.__str__()
+        })
