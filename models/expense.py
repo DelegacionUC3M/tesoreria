@@ -2,8 +2,8 @@ from .connection import db
 
 
 class Expense(db.Model):
-    id = db.Column(db.Integer, db.ForeignKey('BudgetHeading.id'), primary_key=True, autoincrement=1)
-    budgetheading_id = db.Column(db.Integer, db.ForeignKey('budgetheading.id'))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=1)
+    budgetheading_id = db.Column(db.Integer, db.ForeignKey('budget_heading.id'))
     name = db.Column(db.String(255), nullable=False)
     school = db.Column(db.Integer, nullable=False)
     expense_date = db.Column(db.DateTime, nullable=False)
