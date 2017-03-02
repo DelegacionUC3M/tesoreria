@@ -1,5 +1,6 @@
 from .connection import db
 
+
 class Expense(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('BudgetHeading.id'), primary_key=True, autoincrement=1)
     budgetheading_id = db.Column(db.Integer, db.ForeignKey('budgetheading.id'))
@@ -14,6 +15,7 @@ class Expense(db.Model):
     invoices = db.relationship('Invoice', backref='expense',
                             lazy='dynamic')
     observations = db.Column(db.Text, Nullable=False)
+
     def __init__(self, name=None, school=None, expense_date=None, register_date=None, add_date=None, amount=None, revoked=False, invoices=[], observations=None):
         self.name = name
         self.school = school
@@ -28,6 +30,7 @@ class Expense(db.Model):
         self.revoked = revoked
         self.invoices = invoices
         self.observations = observations
+
     def __repr__(self):
         return str({
             'id': self.id,
