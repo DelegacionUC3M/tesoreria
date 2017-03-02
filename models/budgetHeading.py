@@ -1,5 +1,6 @@
 from .connection import db
 
+
 class BudgetHeading(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=1)
     name = db.Column(db.String(255), nullable=False)
