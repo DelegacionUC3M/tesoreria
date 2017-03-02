@@ -2,7 +2,7 @@ from .connection import db
 
 
 class BudgetHeading(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=1)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
     initial_amout=db.Column(db.Integer, nullable=False)
     expenses=db.relationship('Expense', backref='budgetHeading', lazy='dynamic')
@@ -14,4 +14,4 @@ class BudgetHeading(db.Model):
         self.expenses=expenses
 
     def __repr__(self):
-        return{'id':self.id, 'name': self.name, 'initial_amoumt': self.initial_amout, 'expenses': self.expenses}
+        return str({'id':self.id, 'name': self.name, 'initial_amoumt': self.initial_amout, 'expenses': self.expenses})

@@ -2,7 +2,7 @@ from .connection import db
 
 
 class Budget(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=1)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
     school=db.Column(db.Integer,nullable=False)
     visibility=db.Column(db.Boolean, nullable=False)
@@ -17,5 +17,5 @@ class Budget(db.Model):
         self.budget_headings=budget_headings
 
     def __repr__(self):
-        return {'id': self.id, 'name': self.name, 'school': self.school, 'visibility': self.visibility,
-                'public': self.public, 'budget_headings': self.budget_headings}
+        return str({'id': self.id, 'name': self.name, 'school': self.school, 'visibility': self.visibility,
+                'public': self.public, 'budget_headings': self.budget_headings})
