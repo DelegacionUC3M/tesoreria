@@ -1,3 +1,4 @@
+import jinja2
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -23,7 +24,7 @@ def budget_create():
         res = requests.get(url)
         school = res.json()
         print(school)
-        return render_template("create.html", schools=school)
+        return render_template("budget_create.html", schools=school)
 
     elif request.method == "POST":
         name = request.form.get('name')
@@ -35,7 +36,7 @@ def budget_create():
             db.session.commit()
         return name
 
-@app.route('/presupuesto/editar/<id:int>', methods=["GET", "POST"])
+@app.route('/presupuesto/editar/<int:id>', methods=["GET", "POST"])
 def budget_id(id):
     budget = Budget.query.filter_by(id=id).first()
     if request.method == "GET":
@@ -43,7 +44,11 @@ def budget_id(id):
         res = requests.get(url)
         school = res.json()
         print(school)
-        return render_template("create.html", schools=school, budget = budget)
+        if budget.public is True:
+            public_str = 'true'
+        else:
+            public_str = 'false'
+        return render_template("budget_edit.html", schools=school, budget = budget, public = public_str)
 @app.route('/')
 def index():
     return 'Hola mundo'
