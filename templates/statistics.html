@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas</title>
+</head>
+
+<body>
+  <a href="{{ url_for('index') }}">Inicio</a>
+
+	Presupuesto:
+	<select>
+		{% for budget in budgets %}
+			<option value='{{ budget.id }}' name='budget'>{{ budget.name }}</option>
+		{% endfor %}
+	</select>
+
+    
+</body>
+</html>

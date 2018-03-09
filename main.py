@@ -1,16 +1,12 @@
 import datetime
 
-import jinja2
-from flask import Flask
-from flask import render_template
-from flask import request
 import requests
 
-from src.models import Expense
-from src.models.connection import db
-# Inicializacion del objeto Flask
-from src.models import Budget
+from flask import Flask, render_template, request
+from models import Budget, Expense
+from models.connection import db
 
+# Inicializacion del objeto Flask
 app = Flask(__name__)
 
 # Generacion del dict (diccionario) de configuracion desde fichero
@@ -21,91 +17,141 @@ db.app = app
 db.init_app(app)
 db.create_all()
 
-# Url /
+url_api = 'https://delegacion.uc3m.es/deleapi/school'
+
+
+@app.route('/', methods=["GET", "POST"])
+
+
+
+@app.route('/index', methods=["GET"])
+def index():
+    if request.method == "GET":
+        return render_template("index.html",
+                               public_budgets=Budget.query.filter_by(public=True),
+                               private_budgets=Budget.query.filter_by(public=False))
+
+
+# Crea un presupuesto
 @app.route('/presupuesto/crear', methods=["GET", "POST"])
 def budget_create():
     if request.method == "GET":
-        url = 'https://delegacion.uc3m.es/deleapi/school'
-        res = requests.get(url)
+        # Check if the web is up and running
+        # TODO Levantar la deleapi
+        res = requests.get(url_api)
         school = res.json()
-        print(school)
         return render_template("budget_create.html", schools=school)
 
-    elif request.method == "POST":
-        name = request.form.get('name')
-        school = request.form.get('school')
-        public = True if request.form.get('public') == 'on' else False
+    else:
+        name = request.form['name']
+        school = request.form['school']
+        public = True if request.form.get('public') else False
+        # Si se ha especificado el nombre y la escuela se crea el presupuesto
         if name and school:
-            budget = Budget(name, school, False, public, [])
+            budget = Budget(name,
+                            school,
+                            False,  # Por ahora la visibilidad esta desactivada
+                            public,
+                            [])
             db.session.add(budget)
             db.session.commit()
-        return name
+        # return name
+        return render_template("index.html",
+                               public_budgets=Budget.query.filter_by(public=True),
+                               private_budgets=Budget.query.filter_by(public=False))
 
+
+# Edita el presupuesto elegido
 @app.route('/presupuesto/editar/<int:id>', methods=["GET", "POST"])
 def budget_id(id):
-    budget = Budget.query.filter_by(id=id).first()
+    # Obtiene el presupuesto de la base de datos
+    budget = Budget.query.get(id)
     if request.method == "GET":
-        url = 'https://delegacion.uc3m.es/deleapi/school'
-        res = requests.get(url)
+        res = requests.get(url_api)
         school = res.json()
-        if budget.public is True:
-            public_str = 'true'
-        else:
-            public_str = 'false'
-        return render_template("budget_edit.html", schools=school, budget = budget, public = public_str, id = id)
-    elif request.method == "POST":
-        name = request.form.get('name')
-        school = request.form.get('school')
-        public = True if request.form.get('public') == 'on' else False
-        if name and school:
-            budget = Budget.query.filter_by(id=id).first()
-            budget.name = name
-            budget.school = school
-            budget.public = public
+        public_str = 'true' if budget.public is True else 'false'
+        return render_template("budget_edit.html",
+                               schools=school,
+                               budget=budget,
+                               public=public_str,
+                               id=id)
+
+    else:
+        nombre = request.form.get('name')
+        escuela = request.form.get('school')
+        publico = True if request.form.getlist('public') else False
+        if nombre and escuela:
+            budget = Budget.query.get(id)
+            budget.name = nombre if nombre else budget.name
+            budget.school = escuela if escuela else budget.school
+            budget.public = publico if publico else budget.public
             db.session.commit()
-        return 'Updated ' + name + "!"
+        # return 'Updated ' + name + "!"
+
+
+# Lista todos los presupuestos
 @app.route('/presupuestos', methods=["GET", "POST"])
-def get_budgets():
+def budget_list():
     if request.method == "GET":
-        url = 'https://delegacion.uc3m.es/deleapi/school'
-        res = requests.get(url)
+        res = requests.get(url_api)
         school = res.json()
         budgets = Budget.query.all()
-        return render_template("budget_list.html", budgets=budgets, schools=school)
+        return render_template("budget_list.html",
+                               budgets=budgets,
+                               schools=school)
+
+
 @app.route('/gasto/crear', methods=["GET", "POST"])
 def expense_create():
     if request.method == "GET":
-        url = 'https://delegacion.uc3m.es/deleapi/school'
-        res = requests.get(url)
+        res = requests.get(url_api)
         school = res.json()
         budgets = Budget.query.all()
-        return render_template("expense_create.html", budgets=budgets, schools=school)
-    elif request.method == "POST":
-        amount = request.form.get('amount')
-        name = request.form.get('name')
-        budgetGot = request.form.get('budget')
-        print(budgetGot)
-        budgets = Budget.query.all()
-        school = 0
+        return render_template("expense_create.html",
+                               budgets=budgets,
+                               schools=school)
+
+    else:
+        amount = request.form['amount']
+        name = request.form['name']
+        budget_selected = request.form['budget']
+        budget = Budget.query.filter_by(name=budget_selected)
+        school = budget.school
         for budget in budgets:
-            if budget == budgetGot:
+            if budget == budget_selected:
                 school = budget.school
-        expense = Expense(name, school, datetime.datetime.utcnow(), datetime.datetime.utcnow(), datetime.datetime.utcnow(), amount, False, [], 'hello')
+
+        expense = Expense(name,
+                          school,
+                          datetime.datetime.utcnow(),
+                          datetime.datetime.utcnow(),
+                          datetime.datetime.utcnow(),
+                          amount,
+                          False,
+                          [],
+                          'hello')
         db.session.add(expense)
         db.session.commit()
-
         return 'name'
+
+
 @app.route('/gastos', methods=["GET", "POST"])
 def get_expenses():
     if request.method == "GET":
-        url = 'https://delegacion.uc3m.es/deleapi/school'
-        res = requests.get(url)
+        res = requests.get(url_api)
         school = res.json()
         expenses = Expense.query.all()
-        return render_template("expense_list.html", expenses=expenses, schools=school)
-@app.route('/')
-def index():
-    return 'Hola mundo'
+        return render_template("expense_list.html",
+                               expenses=expenses,
+                               schools=school)
+
+
+@app.route('/estadisticas', methods=['GET'])
+def get_statistics():
+    if request.method == 'GET':
+        presupuestos = Budget.query.all()
+        return render_template('statistics.html', budgets=presupuestos)
+
 
 if __name__ == '__main__':
     app.run()

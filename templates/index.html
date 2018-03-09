@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagina principal</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/index.css') }}">
+</head>
+
+<body>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if error %}
+      <p><strong>Error:</strong> {{ error }}
+    {% endif %}
+
+    Inicio
+    <a href="{{ url_for('budget_list') }}">Presupuestos</a>
+    <a href="{{ url_for('get_statistics') }}">Estadísticas</a>
+
+    <div class="presupuestos">
+      <!-- Presupuestos privados -->
+      <div class="columna">
+        Tus presupuestos <br>
+        <a href="{{ url_for('budget_create') }}">+ Nuevo</a>
+
+        {% for budget in private_budgets %}
+        <li>{ budget.name }</li>
+        {% endfor %}
+
+      </div>
+
+      <!-- Presupuestos públicos -->
+      <div>
+        Presupuestos públicos <br>
+
+        {% for budget in public_budgets %}
+        <li>{ budget.name }</li>
+        {% endfor %}
+
+      </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+.columna{
+    float: left;
+    width: 50%;
+}
+
+/* Clear floats after the columns */
+.presupuestos:after {
+    content: "";
+    display: table;
+    clear: both;
+}
