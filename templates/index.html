@@ -30,7 +30,7 @@
         <a href="{{ url_for('budget_create') }}">+ Nuevo</a>
 
         {% for budget in private_budgets %}
-        <li>{ budget.name }</li>
+        <li>{{ budget.name }}</li>
         {% endfor %}
 
       </div>
@@ -40,7 +40,7 @@
         Presupuestos públicos <br>
 
         {% for budget in public_budgets %}
-        <li>{ budget.name }</li>
+        <li>{{ budget.name }}</li>
         {% endfor %}
 
       </div>
