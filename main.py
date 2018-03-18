@@ -48,11 +48,11 @@ def budget_create():
 
         # Si se ha especificado el nombre y la escuela se crea el presupuesto
         if name and school:
-            presupuesto = Budget(name,
-                                 school,
-                                 False,  # Por ahora la visibilidad esta desactivada
-                                 public,
-                                 [])
+            presupuesto = BudgetHeading(name,
+                                        school,
+                                        False,  # Por ahora la visibilidad esta desactivada
+                                        public,
+                                        [])
             db.session.add(presupuesto)
             db.session.commit()
         # return name
