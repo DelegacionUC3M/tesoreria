@@ -23,10 +23,7 @@ class Expense(db.Model):
         self.register_date = register_date
         self.add_date = add_date
         self.amount = amount
-        if(amount >= 0):
-            self.rate = 1
-        else:
-            self.rate = -1
+        self.rate = 1 if amount >= 0 else -1
         self.revoked = revoked
         self.invoices = invoices
         self.observations = observations

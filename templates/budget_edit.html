@@ -6,8 +6,10 @@
 </head>
 
 <form method='post' action='/presupuesto/crear'>
+
 <label for='name'>Name</label>
 <input type='text' name='name' id='name' value='{{budget.name}}'/>
+
 <label for='school'>School</label>
 <select name='school' id='school'>
     {% for school in schools %}
@@ -26,5 +28,6 @@
 <label>
     <input type='checkbox' name='public' id='public'> Public
 </label>
+
 <button type='submit'>Guardar</button>
 </form>

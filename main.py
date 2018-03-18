@@ -3,7 +3,7 @@ import datetime
 import requests
 
 from flask import Flask, render_template, request
-from models import Budget, Expense
+from models import Budget, Expense, BudgetHeading
 from models.connection import db
 
 # Inicializacion del objeto Flask
@@ -17,48 +17,49 @@ db.app = app
 db.init_app(app)
 db.create_all()
 
-url_api = 'https://delegacion.uc3m.es/deleapi/school'
+url_api = 'https://delegacion.uc3m.es/dele_api/school'
 
 
 @app.route('/', methods=["GET", "POST"])
 
 
-
-@app.route('/index', methods=["GET"])
+# Pagina principal de la aplicacion
+@app.route('/index', methods=["GET", "POST"])
 def index():
     if request.method == "GET":
-        return render_template("index.html",
-                               public_budgets=Budget.query.filter_by(public=True),
-                               private_budgets=Budget.query.filter_by(public=False))
+        return render_template(
+            "index.html", public_budgets=Budget.query.filter_by(
+                public=True), private_budgets=Budget.query.filter_by(
+                public=False))
 
 
 # Crea un presupuesto
 @app.route('/presupuesto/crear', methods=["GET", "POST"])
 def budget_create():
     if request.method == "GET":
-        # Check if the web is up and running
-        # TODO Levantar la deleapi
         res = requests.get(url_api)
         school = res.json()
         return render_template("budget_create.html", schools=school)
 
     else:
-        name = request.form['name']
-        school = request.form['school']
-        public = True if request.form.get('public') else False
+        name = str(request.form['name'])
+        school = request.form.get('school')
+        public = True if request.form.getlist('publico') else False
+
         # Si se ha especificado el nombre y la escuela se crea el presupuesto
         if name and school:
-            budget = Budget(name,
-                            school,
-                            False,  # Por ahora la visibilidad esta desactivada
-                            public,
-                            [])
-            db.session.add(budget)
+            presupuesto = Budget(name,
+                                 school,
+                                 False,  # Por ahora la visibilidad esta desactivada
+                                 public,
+                                 [])
+            db.session.add(presupuesto)
             db.session.commit()
         # return name
-        return render_template("index.html",
-                               public_budgets=Budget.query.filter_by(public=True),
-                               private_budgets=Budget.query.filter_by(public=False))
+        return render_template(
+            "index.html", public_budgets=Budget.query.filter_by(
+                public=True), private_budgets=Budget.query.filter_by(
+                public=False))
 
 
 # Edita el presupuesto elegido
@@ -106,6 +107,7 @@ def expense_create():
     if request.method == "GET":
         res = requests.get(url_api)
         school = res.json()
+        # Obtiene los presupuestos para el prestamo especificado
         budgets = Budget.query.all()
         return render_template("expense_create.html",
                                budgets=budgets,
@@ -115,12 +117,9 @@ def expense_create():
         amount = request.form['amount']
         name = request.form['name']
         budget_selected = request.form['budget']
-        budget = Budget.query.filter_by(name=budget_selected)
-        school = budget.school
-        for budget in budgets:
-            if budget == budget_selected:
-                school = budget.school
 
+        budget = BudgetHeading.query.filter_by(name=budget_selected)
+        shool = Budget.query.get(budget.budget_id).school
         expense = Expense(name,
                           school,
                           datetime.datetime.utcnow(),
@@ -129,12 +128,14 @@ def expense_create():
                           amount,
                           False,
                           [],
-                          'hello')
+                          # Observaciones en caso de haber
+                          '')
         db.session.add(expense)
         db.session.commit()
         return 'name'
 
 
+# Obtiene todos los gastos
 @app.route('/gastos', methods=["GET", "POST"])
 def get_expenses():
     if request.method == "GET":
@@ -146,6 +147,7 @@ def get_expenses():
                                schools=school)
 
 
+# TODO Crear estadistica para los presupuestos
 @app.route('/estadisticas', methods=['GET'])
 def get_statistics():
     if request.method == 'GET':

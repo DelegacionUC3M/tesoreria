@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Crear presupuesto</title>
@@ -10,19 +10,19 @@
 
     <form action="{{ request.path }}" method="POST">
 
-    Usuario:
-	<input type="text" name="name" required="true" placeholder="Nombre">
+    Nombre:
+	<input type="text" name="name" required="true" placeholder="Nombre del presupuesto">
 
-	Escuela:
-	<select>
+	Universidad:
+	<select name='school'>
 		{% for school in schools %}
-			<option value='{{school.id_school}}' name='school'>{{school.name}}</option>
+			<option value='{{ school.id_school }}'  required="true">{{ school.name }}</option>
 		{% endfor %}
 	</select>
 
-	<input type='checkbox' name='public'>Public
+    <input type='checkbox' name='publico'>Public<br>
 
-	<button type='submit'>Guardar</button>
+	<input type='submit' value="Guardar">
     </form>
 </body>
 </html>

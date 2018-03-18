@@ -8,7 +8,7 @@
 
 <form action="{{ request.path }}" method="POST">
     <label for='name'>Name</label>
-    <input type='text' name='name' id='name' value='{{budget.name}}' />
+    <input type='text' name='name' id='name' value='{{ budget.name }}' />
 
     <label for='school'>School</label>
     <select name='school' id='school'>
@@ -19,8 +19,7 @@
 
     <script type="text/javascript">
         function setSelectValue() {
-            document.getElementById('school').options.selectedIndex = {{ budget.school }
-        } -1;
+            document.getElementById('school').options.selectedIndex = {{ budget.school }} -1;
         document.getElementById('public').checked = {{ public }};
     }
         window.onload = setSelectValue;

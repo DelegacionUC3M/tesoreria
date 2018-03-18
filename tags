@@ -1,0 +1,71 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/e5c86f75/
+.columna	static/styles/index.css	/^.columna{$/;"	c
+.presupuestos:after	static/styles/index.css	/^.presupuestos:after {$/;"	c
+0	.vscode/tasks.json	/^            "args": ["${file}"],$/;"	s	array:tasks.0.args
+0	.vscode/tasks.json	/^        {$/;"	o	array:tasks
+Budget	models/budget.py	/^class Budget(db.Model):$/;"	c
+BudgetHeading	models/budgetHeading.py	/^class BudgetHeading(db.Model):$/;"	c
+Expense	models/expense.py	/^class Expense(db.Model):$/;"	c
+Invoice	models/invoice.py	/^class Invoice(db.Model):$/;"	c
+__init__	models/budget.py	/^    def __init__(self, name=None, school=None, visibility=False, public=False, budget_headings=[/;"	m	class:Budget
+__init__	models/budgetHeading.py	/^    def __init__(self, name=None, initial_amout=None, expenses=[]):$/;"	m	class:BudgetHeading
+__init__	models/expense.py	/^    def __init__(self, name=None, school=None, expense_date=None, register_date=None, add_date=N/;"	m	class:Expense
+__init__	models/invoice.py	/^    def __init__(self, invoice, id):$/;"	m	class:Invoice
+__repr__	models/budget.py	/^    def __repr__(self):$/;"	m	class:Budget
+__repr__	models/budgetHeading.py	/^    def __repr__(self):$/;"	m	class:BudgetHeading
+__repr__	models/expense.py	/^    def __repr__(self):$/;"	m	class:Expense
+__repr__	models/invoice.py	/^    def __repr__(self):$/;"	m	class:Invoice
+add_date	models/expense.py	/^    add_date = db.Column(db.DateTime, nullable=False)$/;"	v	class:Expense
+amount	models/expense.py	/^    amount = db.Column(db.Integer, nullable=False)$/;"	v	class:Expense
+app	main.py	/^app = Flask(__name__)$/;"	v
+args	.vscode/tasks.json	/^            "args": ["${file}"],$/;"	a	object:tasks.0
+budget_create	main.py	/^def budget_create():$/;"	f
+budget_headings	models/budget.py	/^    budget_headings = db.relationship('BudgetHeading', backref='budget', lazy='dynamic')$/;"	v	class:Budget
+budget_id	main.py	/^def budget_id(id):$/;"	f
+budget_id	models/budgetHeading.py	/^    budget_id = db.Column(db.Integer, db.ForeignKey('budget.id'))$/;"	v	class:BudgetHeading
+budget_list	main.py	/^def budget_list():$/;"	f
+budgetheading_id	models/expense.py	/^    budgetheading_id = db.Column(db.Integer, db.ForeignKey('budget_heading.id'))$/;"	v	class:Expense
+command	.vscode/tasks.json	/^            "command": "\/home\/vinagrero\/Enviroments\/Tesoreria\/bin\/python",$/;"	s	object:tasks.0
+db	models/connection.py	/^db = SQLAlchemy()$/;"	v
+expense_create	main.py	/^def expense_create():$/;"	f
+expense_date	models/expense.py	/^    expense_date = db.Column(db.DateTime, nullable=False)$/;"	v	class:Expense
+expense_id	models/invoice.py	/^    expense_id = db.Column(db.Integer, db.ForeignKey('expense.id'), nullable=False)$/;"	v	class:Invoice
+expenses	models/budgetHeading.py	/^    expenses = db.relationship($/;"	v	class:BudgetHeading
+get_expenses	main.py	/^def get_expenses():$/;"	f
+get_statistics	main.py	/^def get_statistics():$/;"	f
+group	.vscode/tasks.json	/^            "group": {$/;"	o	object:tasks.0
+id	models/budget.py	/^    id = db.Column(db.Integer, primary_key=True, autoincrement=True)$/;"	v	class:Budget
+id	models/budgetHeading.py	/^    id = db.Column(db.Integer, primary_key=True, autoincrement=True)$/;"	v	class:BudgetHeading
+id	models/expense.py	/^    id = db.Column(db.Integer, primary_key=True, autoincrement=True)$/;"	v	class:Expense
+id	models/invoice.py	/^    id = db.Column(db.Integer, primary_key=True, autoincrement=True)$/;"	v	class:Invoice
+index	main.py	/^def index():$/;"	f
+initial_amout	models/budgetHeading.py	/^    initial_amout = db.Column(db.Integer, nullable=False)$/;"	v	class:BudgetHeading
+invoice	models/invoice.py	/^    invoice = db.Column(db.String(255), nullable=False)$/;"	v	class:Invoice
+invoices	models/expense.py	/^    invoices = db.relationship('Invoice', backref='expense',$/;"	v	class:Expense
+isDefault	.vscode/tasks.json	/^                "isDefault": true$/;"	b	object:tasks.0.group
+kind	.vscode/tasks.json	/^                "kind": "build",$/;"	s	object:tasks.0.group
+label	.vscode/tasks.json	/^            "label": "Start server",$/;"	s	object:tasks.0
+name	models/budget.py	/^    name = db.Column(db.String(255), nullable=False)$/;"	v	class:Budget
+name	models/budgetHeading.py	/^    name = db.Column(db.String(255), nullable=False)$/;"	v	class:BudgetHeading
+name	models/expense.py	/^    name = db.Column(db.String(255), nullable=False)$/;"	v	class:Expense
+observations	models/expense.py	/^    observations = db.Column(db.Text, nullable=False)$/;"	v	class:Expense
+public	models/budget.py	/^    public = db.Column(db.Boolean, nullable=False)$/;"	v	class:Budget
+python.linting.enabled	.vscode/settings.json	/^    "python.linting.enabled": true,$/;"	b
+python.linting.flake8Enabled	.vscode/settings.json	/^    "python.linting.flake8Enabled": true,$/;"	b
+python.linting.pylintEnabled	.vscode/settings.json	/^    "python.linting.pylintEnabled": false,$/;"	b
+python.pythonPath	.vscode/settings.json	/^    "python.pythonPath": "\/home\/vinagrero\/Enviroments\/Tesoreria\/bin\/python"$/;"	s
+rate	models/expense.py	/^    rate = db.Column(db.Integer, nullable=False)$/;"	v	class:Expense
+register_date	models/expense.py	/^    register_date = db.Column(db.DateTime, nullable=False)$/;"	v	class:Expense
+revoked	models/expense.py	/^    revoked = db.Column(db.Boolean, nullable=False)$/;"	v	class:Expense
+school	models/budget.py	/^    school = db.Column(db.Integer, nullable=False)$/;"	v	class:Budget
+school	models/expense.py	/^    school = db.Column(db.Integer, nullable=False)$/;"	v	class:Expense
+tasks	.vscode/tasks.json	/^    "tasks": [$/;"	a
+type	.vscode/tasks.json	/^            "type": "shell",$/;"	s	object:tasks.0
+url_api	main.py	/^url_api = 'https:\/\/delegacion.uc3m.es\/dele_api\/school'$/;"	v
+visibility	models/budget.py	/^    visibility = db.Column(db.Boolean, nullable=False)$/;"	v	class:Budget
