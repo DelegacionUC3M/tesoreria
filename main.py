@@ -116,7 +116,7 @@ def budget_list():
 
 
 @app.route('/presupuestos/<int:id>', methods=["GET"])
-def bugdet_show(id):
+def budget_show(id):
     """
     Muesta la informacion sobre un presupuesto
     Muestra las partidas del presupuesto y permite añadir gastos y partidas
@@ -124,8 +124,8 @@ def bugdet_show(id):
     res = requests.get(url_api)
     schools = res.json()
     budget=Budget.query.get(id)
-    return render_template("budget_list.html",
-                           schools=schools
+    return render_template("budget_show.html",
+                           schools=schools,
                            budget=budget)
     
 

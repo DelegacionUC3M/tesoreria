@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Presupuesto</title>
+</head>
+
+<body>
+    Inicio
+    <a href="{{ url_for('index') }}">Inicio</a>
+
+        <div>
+            {{ budget.name }} 
+            <a href="{{ url_for('budget_create', id=budget.id) }}">Partida<a>
+            <a href="{{ url_for('expense_create', id=budget.id) }}">Gasto<a>
+        </div>
+
+</body>
+</html>

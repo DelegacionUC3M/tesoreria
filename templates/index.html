@@ -34,8 +34,7 @@
             {{ budget.name }} 
             <a href="{{ url_for('budget_create', id=budget.id) }}">Partida<a>
             <a href="{{ url_for('expense_create', id=budget.id) }}">Gasto<a>
-
-        </div><br>
+        </div>
         {% endfor %}
 
       </div>
@@ -47,7 +46,7 @@
         {% for budget in public_budgets %}
         <div>
             {{ budget.name }} 
-        </div><br>
+        </div>
         {% endfor %}
 
       </div>

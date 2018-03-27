@@ -15,14 +15,13 @@
     {% for budget in private_budgets %}
     <div>
         {{ budget.name }} 
-        <a href="{{ url_for('budget_create', id=budget.id) }}">Ver<a>
+        <a href="{{ url_for('budget_show', id=budget.id) }}">Ver<a>
         <a href="{{ url_for('budget_edit', id=budget.id) }}">Editar<a>
         <a href="{{ url_for('expense_create', id=budget.id) }}">Partida<a>
         <a href="{{ url_for('expense_create', id=budget.id) }}">Gasto<a>
 
     </div><br>
     {% endfor %}
-
 
       <!-- Presupuestos públicos -->
         Presupuestos públicos <br>
