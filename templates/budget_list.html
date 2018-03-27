@@ -3,30 +3,36 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Editar presupuesto</title>
+    <title>Mostrar presupuestos</title>
 </head>
+<body>
+<a href="{{ url_for('index') }}">Inicio</a>
 
-<form action="{{ request.path }}" method="POST">
-    <label for='name'>Name</label>
-    <input type='text' name='name' id='name' value='{{ budget.name }}' />
+<a href="{{ url_for('budget_create') }}">Nuevo</a>
+    Tus presupuestos <br>
+    <a href="{{ url_for('budget_create') }}">+ Nuevo</a>
 
-    <label for='school'>School</label>
-    <select name='school' id='school'>
-        {% for school in schools %}
-        <option value='{{ school.id_school }}'>{{ school.name }}</option>
+    {% for budget in private_budgets %}
+    <div>
+        {{ budget.name }} 
+        <a href="{{ url_for('budget_create', id=budget.id) }}">Ver<a>
+        <a href="{{ url_for('budget_edit', id=budget.id) }}">Editar<a>
+        <a href="{{ url_for('expense_create', id=budget.id) }}">Partida<a>
+        <a href="{{ url_for('expense_create', id=budget.id) }}">Gasto<a>
+
+    </div><br>
+    {% endfor %}
+
+
+      <!-- Presupuestos públicos -->
+        Presupuestos públicos <br>
+
+        {% for budget in public_budgets %}
+        <div>
+            {{ budget.name }} 
+        </div><br>
         {% endfor %}
-    </select>
 
-    <script type="text/javascript">
-        function setSelectValue() {
-            document.getElementById('school').options.selectedIndex = {{ budget.school }} -1;
-        document.getElementById('public').checked = {{ public }};
-    }
-        window.onload = setSelectValue;
-    </script>
+    </div>
+</body>
 
-    <label>
-        <input type='checkbox' name='public' id='public'> Public
-    </label>
-    <button type='submit'>Guardar</button>
-</form>

@@ -23,7 +23,6 @@ url_api = 'https://delegacion.uc3m.es/dele_api/school'
 @app.route('/', methods=["GET", "POST"])
 
 
-# Pagina principal de la aplicacion
 @app.route('/index', methods=["GET", "POST"])
 def index():
     """
@@ -31,23 +30,20 @@ def index():
     Muestra presupuestos publicos y privados y redirecciona al resto de funcionalidades
     """
     if request.method == "GET":
-        return render_template(
-            "index.html", public_budgets=Budget.query.filter_by(
-                public=True), private_budgets=Budget.query.filter_by(
-                public=False))
+        publics=Budget.query.filter_by(public=True)
+        privates=Budget.query.filter_by(public=False, school=2)
+        return render_template( "index.html", public_budgets=publics, private_budgets=privates) 
 
-
-# Crea un presupuesto
 @app.route('/presupuesto/crear', methods=["GET", "POST"])
 def budget_create():
     """
-    Crea partidas para una universidad.
-    La partida se guarda en Budget
+    Crea presupuestos para una universidad.
+    El presupuesto se guarda en Budget
     """
     if request.method == "GET":
         res = requests.get(url_api)
-        school = res.json()
-        return render_template("budget_create.html", schools=school)
+        schools = res.json()
+        return render_template("budget_create.html", schools=schools)
 
     else:
         name = str(request.form['name'])
@@ -64,25 +60,24 @@ def budget_create():
             db.session.add(presupuesto)
             db.session.commit()
         # Volver al inicio
-        return render_template(
-            "index.html", public_budgets=Budget.query.filter_by(
-                public=True), private_budgets=Budget.query.filter_by(
-                public=False))
+        publics=Budget.query.filter_by(public=True)
+        privates=Budget.query.filter_by(public=False, school=2)
+        return render_template( "index.html", public_budgets=publics, private_budgets=privates) 
 
 
 @app.route('/presupuesto/editar/<int:id>', methods=["GET", "POST"])
-def budget_heading_id(id):
+def budget_edit(id):
     """
     Edita el presupuesto elegido
     """
     # Obtiene el presupuesto de la base de datos
-    budget = BudgetHeading.query.get(id)
+    budget = Budget.query.get(id)
     if request.method == "GET":
         res = requests.get(url_api)
-        school = res.json()
+        schools = res.json()
         public_str = 'true' if budget.public is True else 'false'
         return render_template("budget_edit.html",
-                               schools=school,
+                               schools=schools,
                                budget=budget,
                                public=public_str,
                                id=id)
@@ -97,41 +92,57 @@ def budget_heading_id(id):
             budget.school = escuela if escuela else budget.school
             budget.public = publico if publico else budget.public
             db.session.commit()
-        # return 'Updated ' + name + "!"
+        # Volver al inicio
+        publics=Budget.query.filter_by(public=True)
+        privates=Budget.query.filter_by(public=False, school=2)
+        return render_template( "index.html", public_budgets=publics, private_budgets=privates) 
 
 
 @app.route('/presupuestos', methods=["GET", "POST"])
-def budget_heading_list():
+def budget_list():
     """
     Muestra todos los presupuestos separados en publicos y privados
-    Permite editar los presupuestos a añadir gastos
+    Permite editar los presupuestos y añadir gastos
     """
     if request.method == "GET":
         res = requests.get(url_api)
-        school = res.json()
-        budgets = Budget.query.all()
+        schools = res.json()
+        publics=Budget.query.filter_by(public=True)
+        privates=Budget.query.filter_by(public=False, school=2)
         return render_template("budget_list.html",
-                               budgets=budgets,
-                               schools=school)
+                               public_budgets=publics,
+                               private_budgets=privates,
+                               schools=schools)
 
 
-@app.route('/gasto/crear', methods=["GET", "POST"])
-def expense_create():
+@app.route('/presupuestos/<int:id>', methods=["GET"])
+def bugdet_show(id):
     """
-    TODO: 
-    A la hora de crear el gasto es necesario elegir el presupuesto del que viene.
-    Tal como esta ideado ahora mismo es necesario acceder al DOM para saber el presupuesto.
-    FIXME: 
-    Posible solucion sería elegir el presupuesto de una lista y añadir el gasto desde ahi
+    Muesta la informacion sobre un presupuesto
+    Muestra las partidas del presupuesto y permite añadir gastos y partidas
+    """
+    res = requests.get(url_api)
+    schools = res.json()
+    budget=Budget.query.get(id)
+    return render_template("budget_list.html",
+                           schools=schools
+                           budget=budget)
+    
+
+
+@app.route('/gasto/crear/<int:id>', methods=["GET", "POST"])
+def expense_create(id):
+    """
+    Crea un gasto para el presupuesto 
     """
     if request.method == "GET":
         res = requests.get(url_api)
-        school = res.json()
+        schools = res.json()
         # Obtiene los presupuestos para el prestamo especificado
-        budgets = Budget.query.all()
+        budgets = Budget.query.get(id)
         return render_template("expense_create.html",
                                budgets=budgets,
-                               schools=school)
+                               schools=schools)
 
     else:
         amount = int(request.form['amount'])
@@ -148,8 +159,7 @@ def expense_create():
                           amount,
                           False,
                           [],
-                          # Observaciones en caso de haber
-                          '')
+                          '')# Observaciones en caso de haber
         db.session.add(gasto)
         db.session.commit()
         return render_template(
@@ -161,23 +171,20 @@ def expense_create():
 @app.route('/gastos', methods=["GET", "POST"])
 def get_expenses():
     """
-    TODO:
-    Obtener todos los gastos disponibles
+    TODO: Obtener todos los gastos disponibles
     """
     if request.method == "GET":
         res = requests.get(url_api)
-        school = res.json()
+        schools = res.json()
         expenses = Expense.query.all()
         return render_template("expense_list.html",
                                expenses=expenses,
-                               schools=school)
-
+                               schools=schools)
 
 @app.route('/estadisticas', methods=['GET'])
 def get_statistics():
     """
-    TODO: 
-    Crear estadistica para los presupuestos y los gastos
+    TODO: Crear estadistica para los presupuestos y los gastos
     """
     if request.method == 'GET':
         presupuestos = Budget.query.all()

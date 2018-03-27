@@ -30,7 +30,12 @@
         <a href="{{ url_for('budget_create') }}">+ Nuevo</a>
 
         {% for budget in private_budgets %}
-        <li>{{ budget.name }}</li>
+        <div>
+            {{ budget.name }} 
+            <a href="{{ url_for('budget_create', id=budget.id) }}">Partida<a>
+            <a href="{{ url_for('expense_create', id=budget.id) }}">Gasto<a>
+
+        </div><br>
         {% endfor %}
 
       </div>
@@ -40,7 +45,9 @@
         Presupuestos públicos <br>
 
         {% for budget in public_budgets %}
-        <li>{{ budget.name }}</li>
+        <div>
+            {{ budget.name }} 
+        </div><br>
         {% endfor %}
 
       </div>
