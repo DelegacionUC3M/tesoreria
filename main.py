@@ -30,9 +30,9 @@ def index():
     Muestra presupuestos publicos y privados y redirecciona al resto de funcionalidades
     """
     if request.method == "GET":
-        publics=Budget.query.filter_by(public=True)
-        privates=Budget.query.filter_by(public=False, school=2)
-        return render_template( "index.html", public_budgets=publics, private_budgets=privates) 
+        publics = Budget.query.filter_by(public=True)
+        privates = Budget.query.filter_by(public=False, school=2)
+        return render_template("index.html", public_budgets=publics, private_budgets=privates) 
 
 
 @app.route('/presupuestos/crear', methods=["GET", "POST"])
@@ -51,17 +51,26 @@ def budget_create():
         school = request.form.get('school')
         public = True if request.form.getlist('publico') else False
 
-        presupuesto = Budget(name,
-                             school,
-                             False,  # Por ahora la visibilidad esta desactivada
-                             public,
-                             [])
-        db.session.add(presupuesto)
-        db.session.commit()
-        # Volver al inicio
-        publics=Budget.query.filter_by(public=True)
-        privates=Budget.query.filter_by(public=False, school=2)
-        return render_template( "index.html", public_budgets=publics, private_budgets=privates) 
+        # Si el presupuesto no existe se crea
+        if not Budget.query.filter_by(name=name, school=school):
+            presupuesto = Budget(name,
+                                 school,
+                                 False,  # Por ahora la visibilidad esta desactivada
+                                 public,
+                                 [])
+            db.session.add(presupuesto)
+            db.session.commit()
+            # Volver al inicio
+            publics=Budget.query.filter_by(public=True)
+            privates=Budget.query.filter_by(public=False, school=2)
+            return render_template( "index.html", public_budgets=publics, private_budgets=privates) 
+        # El presupuesto ya existe
+        else:
+            # Volver al inicio
+            error = "El presupuesto creado ya existe"
+            publics=Budget.query.filter_by(public=True)
+            privates=Budget.query.filter_by(public=False, school=2)
+            return render_template( "index.html", public_budgets=publics, private_budgets=privates, error=error) 
 
 
 @app.route('/presupuestos/editar/<int:id>', methods=["GET", "POST"])
@@ -132,16 +141,27 @@ def budget_heading_create(id):
         # Creamos la partida
         name = request.form['name']
         amount = request.form["initial_amount"]
-        heading = BudgetHeading(id,
-                                name,
-                                amount)
-        db.session.add(heading)
-        db.session.commit()
-        publics=Budget.query.filter_by(public=True)
-        privates=Budget.query.filter_by(public=False, school=2)
-        return render_template("index.html", 
-                               public_budgets=publics,
-                               private_budgets=privates) 
+        # Si la partida no existe se crea
+        if not BudgetHeading.query.filter_by(name=name, initial_amount=amount):
+            heading = BudgetHeading(id,
+                                    name,
+                                    amount)
+            db.session.add(heading)
+            db.session.commit()
+            publics=Budget.query.filter_by(public=True)
+            privates=Budget.query.filter_by(public=False, school=2)
+            return render_template("index.html", 
+                                   public_budgets=publics,
+                                   private_budgets=privates) 
+        # La partida ya existe
+        else:
+            error = "La partida creada ya existe"
+            publics=Budget.query.filter_by(public=True)
+            privates=Budget.query.filter_by(public=False, school=2)
+            return render_template("index.html", 
+                                   public_budgets=publics,
+                                   private_budgets=privates,
+                                   error=error) 
 
 
 @app.route('/partidas/<int:id>', methods=["GET", "POST"])

@@ -16,8 +16,10 @@
     {% endwith %}
 
     {% if error %}
-      <p><strong>Error:</strong> {{ error }}
+        <p><strong>Error:</strong> {{ error }}
     {% endif %}
+
+    <br>
 
     Inicio
     <a href="{{ url_for('budget_list') }}">Presupuestos</a>

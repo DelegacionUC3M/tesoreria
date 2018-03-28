@@ -16,7 +16,7 @@
 	Universidad:
 	<select name='school'>
 		{% for school in schools %}
-			<option value='{{ school.id_school }}'  required="true">{{ school.name }}</option>
+        <option value='{{ school.id_school }}'  required="true" {% if school.id_school == 2 %} selected {% endif %}>{{ school.name }}</option>
 		{% endfor %}
 	</select>
 
