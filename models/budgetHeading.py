@@ -8,10 +8,10 @@ class BudgetHeading(db.Model):
     initial_amount = db.Column(db.Integer, nullable=False)
     expenses = db.relationship('Expense', backref='budgetHeading', lazy='dynamic')
 
-    def __init__(self, budget_id, name, initial_amout, expenses=[]):
-        self.budget_id=budget_id
+    def __init__(self, budget_id, name, initial_amount, expenses=[]):
+        self.budget_id = budget_id
         self.name = name
-        self.initial_amout = initial_amout
+        self.initial_amount = initial_amount
         self.expenses = expenses
 
     def __repr__(self):

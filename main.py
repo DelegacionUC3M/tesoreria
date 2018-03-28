@@ -51,15 +51,13 @@ def budget_create():
         school = request.form.get('school')
         public = True if request.form.getlist('publico') else False
 
-        # Si se ha especificado el nombre y la escuela se crea el presupuesto
-        if name and school:
-            presupuesto = Budget(name,
-                                 school,
-                                 False,  # Por ahora la visibilidad esta desactivada
-                                 public,
-                                 [])
-            db.session.add(presupuesto)
-            db.session.commit()
+        presupuesto = Budget(name,
+                             school,
+                             False,  # Por ahora la visibilidad esta desactivada
+                             public,
+                             [])
+        db.session.add(presupuesto)
+        db.session.commit()
         # Volver al inicio
         publics=Budget.query.filter_by(public=True)
         privates=Budget.query.filter_by(public=False, school=2)
@@ -141,17 +139,12 @@ def budget_heading_create(id):
     else:
         # Creamos la partida
         name = request.form['name']
-        amount = request.form['initial_amount']
+        amount = request.form["initial_amount"]
         heading = BudgetHeading(id,
                                 name,
-                                amount,
-                                [])
+                                amount)
         db.session.add(heading)
-        # Añadimos la partida al presupuesto
-        budget = Budget.query.get(id)
-        budget.budget_headings.append(heading)
         db.session.commit()
-        # Volvemos al inicio
         publics=Budget.query.filter_by(public=True)
         privates=Budget.query.filter_by(public=False, school=2)
         return render_template("index.html", 
