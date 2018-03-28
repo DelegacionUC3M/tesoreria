@@ -7,7 +7,8 @@ class Invoice(db.Model):
     expense_id = db.Column(db.Integer, db.ForeignKey('expense.id'), nullable=False)
     invoice = db.Column(db.String(255), nullable=False)
 
-    def __init__(self, invoice, id):
+    def __init__(self, expense_id, invoice):
+        self.expense_id = expense_id
         self.invoice = invoice
 
     def __repr__(self):

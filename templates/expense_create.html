@@ -15,21 +15,21 @@ Nombre:
 Universidad:
 <select name='school' id='school'>
     {% for school in schools %}
-        <option value='{{school.id_school}}' required="true">{{school.name}}</option>
+        <option value='{{ school.id_school }}' required="true">{{school.name}}</option>
     {% endfor %}
 </select>
 
 Cantidad:
 <input type="number" name="amount" max="{{ heading.initial_amount }}"required="true" placeholder="Cantidad">
 
-Fecha 
-<input type="date" name="expense_date" required="true" placeholder="">
+Fecha del gasto:
+<input type="date" name="expense_date" required="true" placeholder="Cuando se hizo el gasto">
 
 Fecha
-<input type="date" name="add_date" placeholder="">
+<input type="date" name="add_date" placeholder="Cuando">
 
-Fecha
-<input type="date" name="register_date" placeholder="">
+Fecha de registro:
+<input type="date" name="register_date" placeholder="Cuando se registro el gasto">
 
 Observaciones:
 <input type="text" name="observations" required="false" placeholder="Observaciones sobre el gasto">

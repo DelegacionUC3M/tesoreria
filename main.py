@@ -131,20 +131,32 @@ def budget_show(id):
                            budget=budget)
     
 
-@app.route('/partidas/crear', methods=["GET", "POST"])
-def budget_heading_create():
+@app.route('/partidas/crear/<int:id>', methods=["GET", "POST"])
+def budget_heading_create(id):
     """
     Crea una partida para el presupuesto
     """
     if request.method == "GET":
         return render_template("budget_heading_create.html")
     else:
+        # Creamos la partida
+        name = request.form['name']
+        amount = request.form['initial_amount']
+        heading = BudgetHeading(id,
+                                name,
+                                amount,
+                                [])
+        db.session.add(heading)
+        # Añadimos la partida al presupuesto
+        budget = Budget.query.get(id)
+        budget.budget_headings.append(heading)
+        db.session.commit()
+        # Volvemos al inicio
         publics=Budget.query.filter_by(public=True)
         privates=Budget.query.filter_by(public=False, school=2)
-        return render_template("budget_list.html",
+        return render_template("index.html", 
                                public_budgets=publics,
-                               private_budgets=privates,
-                               schools=schools)
+                               private_budgets=privates) 
 
 
 @app.route('/partidas/<int:id>', methods=["GET", "POST"])
@@ -179,9 +191,12 @@ def expense_create(id):
         amount = int(request.form['amount'])
         name = str(request.form['name'])
         budget_selected = request.form['budget']
+        school = request.form.getlist('school')
+        register_date = request.form['register_date']
+        add_date = request.form['add_date']
+        expense_date = request.form['expense_date']
 
         presupuesto = BudgetHeading.query.filter_by(name=budget_selected)
-        school = (Budget.query.get(presupuesto.budget_id)).school
         expense = Expense(name,
                           school,
                           datetime.datetime.utcnow(),

@@ -7,11 +7,18 @@
 
 <body>
     <a href="{{ url_for('index') }}">Inicio</a>
-        <div>
-            {{ budget.name }} 
-            <a href="{{ url_for('budget_create', id=budget.id) }}">Partida<a>
-            <a href="{{ url_for('expense_create', id=budget.id) }}">Gasto<a>
-        </div>
+    <div>
+        {{ budget.name }} 
+        <a href="{{ url_for('budget_create', id=budget.id) }}">Partida<a>
+        <a href="{{ url_for('expense_create', id=budget.id) }}">Gasto<a>
+    </div>
+
+    {% for heading in headings %}
+    <div>
+        {{ heading.name }}
+        {{ heading.initial_amount }}
+    </div>
+    {% endfor %}
 
 </body>
 </html>
