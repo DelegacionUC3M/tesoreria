@@ -5,24 +5,36 @@
     <title>Editar presupuesto</title>
 </head>
 
-<form method='post' action='/presupuesto/crear'>
-<label for='name'>Name</label>
-<input type='text' name='name' id='name' value='{{budget.name}}'/>
-<label for='school'>School</label>
+<a href="{{ url_for('index') }}">Inicio</a>
+
+<form action="{{ request.path }}" method="POST">
+
+Nombre:
+<input type="text" name="name" required="true" placeholder="Nombre del presupuesto">
+
+Universidad:
 <select name='school' id='school'>
     {% for school in schools %}
-        <option value='{{school.id_school}}'>{{school.name}}</option>
+        <option value='{{school.id_school}}' required="true">{{school.name}}</option>
     {% endfor %}
 </select>
 
-<script type="text/javascript">
-    function setSelectValue () {
-    document.getElementById('school').options.selectedIndex = {{budget.school}}-1;
-    document.getElementById('public').checked = {{public}};
-    }
-    window.onload = setSelectValue;
-</script>
+Cantidad:
+<input type="number" name="amount" max="{{ heading.initial_amount }}"required="true" placeholder="Cantidad">
 
-    <input type='checkbox' name='public' id='public'> Public
-    <button type='submit'>Guardar</button>
+Fecha 
+<input type="date" name="expense_date" required="true" placeholder="">
+
+Fecha
+<input type="date" name="add_date" placeholder="">
+
+Fecha
+<input type="date" name="register_date" placeholder="">
+
+Observaciones:
+<input type="text" name="observations" required="false" placeholder="Observaciones sobre el gasto">
+
+<input type='submit' value="Guardar">
 </form>
+</body>
+</html>

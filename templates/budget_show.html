@@ -6,9 +6,7 @@
 </head>
 
 <body>
-    Inicio
     <a href="{{ url_for('index') }}">Inicio</a>
-
         <div>
             {{ budget.name }} 
             <a href="{{ url_for('budget_create', id=budget.id) }}">Partida<a>

@@ -46,6 +46,7 @@
         {% for budget in public_budgets %}
         <div>
             {{ budget.name }} 
+            <a href="{{ url_for('budget_show', id=budget.id) }}">Ver<a>
         </div>
         {% endfor %}
 

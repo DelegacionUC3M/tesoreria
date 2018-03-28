@@ -34,7 +34,8 @@ def index():
         privates=Budget.query.filter_by(public=False, school=2)
         return render_template( "index.html", public_budgets=publics, private_budgets=privates) 
 
-@app.route('/presupuesto/crear', methods=["GET", "POST"])
+
+@app.route('/presupuestos/crear', methods=["GET", "POST"])
 def budget_create():
     """
     Crea presupuestos para una universidad.
@@ -65,7 +66,7 @@ def budget_create():
         return render_template( "index.html", public_budgets=publics, private_budgets=privates) 
 
 
-@app.route('/presupuesto/editar/<int:id>', methods=["GET", "POST"])
+@app.route('/presupuestos/editar/<int:id>', methods=["GET", "POST"])
 def budget_edit(id):
     """
     Edita el presupuesto elegido
@@ -126,22 +127,52 @@ def budget_show(id):
     budget=Budget.query.get(id)
     return render_template("budget_show.html",
                            schools=schools,
+                           headings=budget.budget_headings,
                            budget=budget)
     
 
+@app.route('/partidas/crear', methods=["GET", "POST"])
+def budget_heading_create():
+    """
+    Crea una partida para el presupuesto
+    """
+    if request.method == "GET":
+        return render_template("budget_heading_create.html")
+    else:
+        publics=Budget.query.filter_by(public=True)
+        privates=Budget.query.filter_by(public=False, school=2)
+        return render_template("budget_list.html",
+                               public_budgets=publics,
+                               private_budgets=privates,
+                               schools=schools)
 
-@app.route('/gasto/crear/<int:id>', methods=["GET", "POST"])
+
+@app.route('/partidas/<int:id>', methods=["GET", "POST"])
+def budget_heading_list(id):
+    """
+    Muestra las partidas de un presupuesto
+    """
+
+
+@app.route('/partidas/editar/<int:id>', methods=["GET", "POST"])
+def budget_heading_edit(id):
+    """
+    Edita una partida
+    """
+
+
+@app.route('/gastos/crear/<int:id>', methods=["GET", "POST"])
 def expense_create(id):
     """
-    Crea un gasto para el presupuesto 
+    Crea un gasto para la partida
     """
     if request.method == "GET":
         res = requests.get(url_api)
         schools = res.json()
-        # Obtiene los presupuestos para el prestamo especificado
-        budgets = Budget.query.get(id)
+        # Obtiene la partida para el prestamo especificado
+        budget_heading = BudgetHeading.query.get(id)
         return render_template("expense_create.html",
-                               budgets=budgets,
+                               heading=budget_heading,
                                schools=schools)
 
     else:
@@ -180,6 +211,7 @@ def get_expenses():
         return render_template("expense_list.html",
                                expenses=expenses,
                                schools=schools)
+
 
 @app.route('/estadisticas', methods=['GET'])
 def get_statistics():

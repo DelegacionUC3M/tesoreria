@@ -7,9 +7,9 @@
 </head>
 <body>
 <a href="{{ url_for('index') }}">Inicio</a>
+<a href="{{ url_for('budget_create') }}">Nuevo</a><br>
 
-<a href="{{ url_for('budget_create') }}">Nuevo</a>
-    Tus presupuestos <br>
+    Tus presupuestos
     <a href="{{ url_for('budget_create') }}">+ Nuevo</a>
 
     {% for budget in private_budgets %}
@@ -29,6 +29,7 @@
         {% for budget in public_budgets %}
         <div>
             {{ budget.name }} 
+            <a href="{{ url_for('budget_show', id=budget.id) }}">Ver<a>
         </div><br>
         {% endfor %}
 
