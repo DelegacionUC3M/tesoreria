@@ -15,11 +15,11 @@ class Expense(db.Model):
     invoices = db.relationship('Invoice', backref='expense', lazy='dynamic')
     observations = db.Column(db.Text)
 
-    def __init__(self, name, school, expense_date, amount, add_date, revoked, register_date=None, invoices=[], observations=""):
+    def __init__(self, name, school, amount, expense_date, add_date, revoked, register_date=None, invoices=[], observations=""):
         self.name = name
         self.school = school
-        self.expense_date = expense_date
         self.amount = amount
+        self.expense_date = expense_date
         self.add_date = add_date
         self.revoked = revoked
         self.register_date = register_date

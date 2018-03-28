@@ -73,24 +73,16 @@ def budget_edit(id):
     budget = Budget.query.get(id)
     if request.method == "GET":
         res = requests.get(url_api)
-        schools = res.json()
-        public_str = 'true' if budget.public is True else 'false'
+        school = res.json()
         return render_template("budget_edit.html",
-                               schools=schools,
                                budget=budget,
-                               public=public_str,
+                               school=school[1],
                                id=id)
 
     else:
-        nombre = request.form.get('name')
-        escuela = request.form.get('school')
-        publico = True if request.form.getlist('public') else False
-        if nombre and escuela:
-            budget = Budget.query.get(id)
-            budget.name = nombre if nombre else budget.name
-            budget.school = escuela if escuela else budget.school
-            budget.public = publico if publico else budget.public
-            db.session.commit()
+        nombre = request.form['name']
+        budget.name = nombre if nombre else budget.name
+        db.session.commit()
         # Volver al inicio
         publics=Budget.query.filter_by(public=True)
         privates=Budget.query.filter_by(public=False, school=2)
@@ -173,29 +165,30 @@ def expense_create(id):
     """
     if request.method == "GET":
         res = requests.get(url_api)
-        schools = res.json()
         # Obtiene la partida para el prestamo especificado
-        budget_heading = BudgetHeading.query.get(id)
+        # budget_heading = BudgetHeading.query.get(id)
+        budget = Budget.query.get(id)
+        headings = budget.budget_headings
         return render_template("expense_create.html",
-                               heading=budget_heading,
-                               schools=schools)
+                               headings=headings,
+                               budget=budget)
 
     else:
         amount = int(request.form['amount'])
         name = str(request.form['name'])
-        budget_selected = request.form['budget']
-        school = request.form.getlist('school')
+        budget_heading = request.form.getlist("budget_heading")
         register_date = request.form['register_date']
         add_date = request.form['add_date']
         expense_date = request.form['expense_date']
 
-        presupuesto = BudgetHeading.query.filter_by(name=budget_selected)
+        partida = BudgetHeading.query.get(budget_heading)
         expense = Expense(name,
                           school,
-                          datetime.datetime.utcnow(),
-                          datetime.datetime.utcnow(),
-                          datetime.datetime.utcnow(),
                           amount,
+                          expense_date,
+                          add_date,
+                          revoked,
+                          register_date,
                           False,
                           [],
                           '')# Observaciones en caso de haber

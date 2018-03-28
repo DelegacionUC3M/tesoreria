@@ -6,8 +6,7 @@
     <title>Mostrar presupuestos</title>
 </head>
 <body>
-<a href="{{ url_for('index') }}">Inicio</a>
-<a href="{{ url_for('budget_create') }}">Nuevo</a><br>
+<a href="{{ url_for('index') }}">Inicio</a><br>
 
     Tus presupuestos
     <a href="{{ url_for('budget_create') }}">+ Nuevo</a>
@@ -17,7 +16,7 @@
         {{ budget.name }} 
         <a href="{{ url_for('budget_show', id=budget.id) }}">Ver<a>
         <a href="{{ url_for('budget_edit', id=budget.id) }}">Editar<a>
-        <a href="{{ url_for('expense_create', id=budget.id) }}">Partida<a>
+        <a href="{{ url_for('budget_heading_create', id=budget.id) }}">Partida<a>
         <a href="{{ url_for('expense_create', id=budget.id) }}">Gasto<a>
 
     </div><br>

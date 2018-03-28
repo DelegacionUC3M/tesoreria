@@ -4,30 +4,14 @@
     <meta charset="UTF-8">
     <title>Editar presupuesto</title>
 </head>
+<body>
+    
+<form action="{{ request.path }}" method="POST">
+Nombre:
+<input type='text' name='name' id='name' value='{{budget.name}}'>
 
-<form method='post' action='/presupuesto/crear'>
+Universidad: {{ school.name }}
 
-<label for='name'>Name</label>
-<input type='text' name='name' id='name' value='{{budget.name}}'/>
-
-<label for='school'>School</label>
-<select name='school' id='school'>
-    {% for school in schools %}
-        <option value='{{school.id_school}}'>{{school.name}}</option>
-    {% endfor %}
-</select>
-
-<script type="text/javascript">
-    function setSelectValue () {
-    document.getElementById('school').options.selectedIndex = {{budget.school}}-1;
-    document.getElementById('public').checked = {{public}};
-    }
-    window.onload = setSelectValue;
-</script>
-
-<label>
-    <input type='checkbox' name='public' id='public'> Public
-</label>
-
-<button type='submit'>Guardar</button>
+<input type='submit' value="Guardar">
 </form>
+</body>

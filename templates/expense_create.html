@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Editar presupuesto</title>
+    <title>Crear gasto</title>
 </head>
 
 <a href="{{ url_for('index') }}">Inicio</a>
@@ -10,23 +10,24 @@
 <form action="{{ request.path }}" method="POST">
 
 Nombre:
-<input type="text" name="name" required="true" placeholder="Nombre del presupuesto">
+<input type="text" name="name" required="true" placeholder="Nombre del gasto">
 
-Universidad:
-<select name='school' id='school'>
-    {% for school in schools %}
-        <option value='{{ school.id_school }}' required="true">{{school.name}}</option>
+Partida:
+<select name="budget_heading">
+    {% for heading in headings %}
+        <option value='{{ heading.id }}' required="true">{{ heading.name }}</option>
     {% endfor %}
 </select>
 
+<!-- TODO: Obtener la cantidad maxima mediante la partida seleccionada en el selector -->
 Cantidad:
-<input type="number" name="amount" max="{{ heading.initial_amount }}"required="true" placeholder="Cantidad">
+<input type="number" name="amount" required="true" placeholder="Cantidad">
 
 Fecha del gasto:
 <input type="date" name="expense_date" required="true" placeholder="Cuando se hizo el gasto">
 
-Fecha
-<input type="date" name="add_date" placeholder="Cuando">
+Fecha a pasar:
+<input type="date" name="add_date" placeholder="Cuando se registra el gasto">
 
 Fecha de registro:
 <input type="date" name="register_date" placeholder="Cuando se registro el gasto">
