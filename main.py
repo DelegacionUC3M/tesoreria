@@ -183,11 +183,11 @@ def expense_create(id):
     """
     Crea un gasto para la partida
     """
+    budget = Budget.query.get(id)
     if request.method == "GET":
         res = requests.get(url_api)
         # Obtiene la partida para el prestamo especificado
         # budget_heading = BudgetHeading.query.get(id)
-        budget = Budget.query.get(id)
         headings = budget.budget_headings
         return render_template("expense_create.html",
                                headings=headings,
@@ -196,28 +196,27 @@ def expense_create(id):
     else:
         amount = int(request.form['amount'])
         name = str(request.form['name'])
-        budget_heading = request.form.getlist("budget_heading")
+        budget_heading_id = int(request.form.get("budget_heading"))
         register_date = request.form['register_date']
         add_date = request.form['add_date']
         expense_date = request.form['expense_date']
 
-        partida = BudgetHeading.query.get(budget_heading)
-        expense = Expense(name,
-                          school,
+        partida = BudgetHeading.query.get(budget_heading_id)
+        expense = Expense(budget_heading_id,
+                          name,
+                          budget.school,
                           amount,
                           expense_date,
                           add_date,
-                          revoked,
+                          False,  # Revoked, por ahora es falso
                           register_date,
-                          False,
                           [],
-                          '')# Observaciones en caso de haber
-        db.session.add(gasto)
+                          "")# Observaciones en caso de haber
+        db.session.add(expense)
         db.session.commit()
-        return render_template(
-            "index.html", public_budgets=Budget.query.filter_by(
-                public=True), private_budgets=Budget.query.filter_by(
-                public=False))
+        return render_template("index.html", 
+                               public_budgets=Budget.query.filter_by(public=True),
+                               private_budgets=Budget.query.filter_by(public=False))
 
 
 @app.route('/gastos', methods=["GET", "POST"])

@@ -19,21 +19,20 @@ Partida:
     {% endfor %}
 </select>
 
-<!-- TODO: Obtener la cantidad maxima mediante la partida seleccionada en el selector -->
 Cantidad:
 <input type="number" name="amount" required="true" placeholder="Cantidad">
 
 Fecha del gasto:
-<input type="date" name="expense_date" required="true" placeholder="Cuando se hizo el gasto">
+<input type="date" name="expense_date" required="true" title="Cuando se hizo el gasto">
 
 Fecha a pasar:
-<input type="date" name="add_date" placeholder="Cuando se registra el gasto">
+<input type="date" name="add_date" title="Cuando se guarda el gasto">
 
 Fecha de registro:
-<input type="date" name="register_date" placeholder="Cuando se registro el gasto">
+<input type="date" name="register_date" title="Cuando se registro el gasto">
 
 Observaciones:
-<input type="text" name="observations" required="false" placeholder="Observaciones sobre el gasto">
+<input type="text" name="observations" placeholder="Observaciones sobre el gasto">
 
 <input type='submit' value="Guardar">
 </form>

@@ -16,9 +16,13 @@
     {% for heading in headings %}
     <div>
         {{ heading.name }}
-        Cantidad Inicial:
-        {{ heading.initial_amount }}
-        Gastos:
+        Cantidad Inicial: {{ heading.initial_amount }}
+
+        {% for gasto in heading.expenses %}
+            {{ sum }}
+            {% set sum = sum + gasto.amount %}
+        {% endfor %}
+        Gastos: {{ sum }}
     </div>
     {% endfor %}
 
