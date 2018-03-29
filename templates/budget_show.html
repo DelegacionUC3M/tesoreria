@@ -20,16 +20,8 @@
         <a href="{{ url_for('expense_show',id=heading.id) }}">Mostrar Gastos</a>
         <a href="{{ url_for('budget_heading_edit',id=heading.id) }}">Edit</a><br>
         Cantidad Inicial: {{ heading.initial_amount }}<br>
-
-        {% set gastos = 0 %}
-        {% for gasto in heading.expenses %}
-            <!-- {{ gastos }}: {{ gastos + gasto.amount }} -->
-            {% set gastos = gastos + gasto.amount %}
-        {% endfor %}
-        Gastos: {{ gastos }}<br>
-
-        {% set result = heading.initial_amount - gastos %}
-        Balance: {{ result }}
+        Gastos: {{ expenses[heading.name] }}<br>
+        Balance: {{ heading.initial_amount - expenses[heading.name] }}
     </div>
     {% endfor %}
 

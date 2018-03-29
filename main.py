@@ -124,8 +124,15 @@ def budget_show(id):
     """
     res = requests.get(url_api)
     budget=Budget.query.get(id)
+    headings = BudgetHeading.query.filter_by(budget_id=id)
+    # Diccionario utilizado para almacenar los datos
+    expenses = {}
+    for heading in headings:
+        expenses.update({heading.name: sum(gasto.amount for gasto in heading.expenses)})
+    print(str(expenses))
     return render_template("budget_show.html",
                            headings=budget.budget_headings,
+                           expenses=expenses,
                            budget=budget)
     
 
