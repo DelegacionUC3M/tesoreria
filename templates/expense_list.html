@@ -8,7 +8,8 @@
     <a href="{{ url_for('index') }}">Inicio</a><br>
     {% for expense in expenses %}
         <div>
-            Nombre: {{ expense.name }}<br>
+            Nombre: {{ expense.name }}
+            <a href="{{ url_for('expense_edit',id=expense.id) }}">Editar</a><br>
             Cantidad : {{ expense.amount }}<br>
             Fecha de registro : {{ expense.add_date }}<br>
             Fecha del gasto : {{ expense.expense_date }}<br>

@@ -16,10 +16,16 @@ Nombre:
 Cantidad: {{ budget.amount }}
 {% endif %}
 
-{% if budget.amount %}
+{% if budget.observations == "" or budget.observations %}
 Observaciones:
-<input type='text' name='observations' value='{{ budget.name }}'>
+<input type='text' name='observations' value='{{ budget.observations }}'>
 {% endif %}
+
+{% if budget.register_date %}
+Fecha de registro:
+<input type="date" name="register_date" title="Cuando se registro el gasto">
+{% endif %}
+
 
 {% if school %}
 Universidad: {{ school.name }}

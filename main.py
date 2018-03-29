@@ -49,7 +49,7 @@ def budget_create():
 
     else:
         name = str(request.form['name'])
-        school = int(request.form.get('school'))
+        school = float(request.form.get('school'))
         public = True if request.form.getlist('publico') else False
 
         # Si el presupuesto no existe se crea
@@ -145,8 +145,8 @@ def budget_heading_create(id):
         return render_template("budget_heading_create.html")
     else:
         # Creamos la partida
-        name = request.form['name']
-        amount = request.form["initial_amount"]
+        name = str(request.form['name'])
+        amount = float(request.form["initial_amount"])
         # Si la partida no existe se crea
         if BudgetHeading.query.filter_by(name=name, initial_amount=amount).count() == 0:
             heading = BudgetHeading(id,
@@ -184,7 +184,7 @@ def budget_heading_edit(id):
                                budget=heading,
                                id=id)
     else:
-        nombre = request.form['name']
+        nombre = str(request.form['name'])
         heading.name = nombre if nombre else heading.name
         db.session.commit()
         # Volver al inicio
@@ -205,8 +205,7 @@ def budget_heading_transfer(id):
         return render_template("budget_heading_transfer.html",
                                headings=budget.budget_headings)
     else:
-        # TODO: Crear gasto en la deudora e ingreso en la adeudada en vez de cambiar la cantidad inicial
-        amount = int(request.form['amount'])
+        amount = float(request.form['amount'])
         from_heading_id = int(request.form.get('from_heading'))
         to_heading_id = int(request.form.get('to_heading'))
         from_heading = BudgetHeading.query.get(from_heading_id)
@@ -264,7 +263,7 @@ def expense_create(id):
                                budget=budget)
 
     else:
-        amount = - int(request.form['amount'])
+        amount = - float(request.form['amount'])
         name = str(request.form['name'])
         budget_heading_id = int(request.form.get("budget_heading"))
         register_date = request.form['register_date']
@@ -282,7 +281,6 @@ def expense_create(id):
                           register_date,
                           [],
                           "")# Observaciones en caso de haber
-        print(amount)
         db.session.add(expense)
         db.session.commit()
         publics=Budget.query.filter_by(public=True)
@@ -312,7 +310,7 @@ def expense_edit(id):
     Edita las observaciones de un gasto
     """
     # Obtiene el gasto de la base de datos
-    expense = expense.query.get(id)
+    expense = Expense.query.get(id)
     if request.method == "GET":
         res = requests.get(url_api)
         school = res.json()
@@ -320,7 +318,7 @@ def expense_edit(id):
                                budget=expense,
                                id=id)
     else:
-        observations = request.form['observations']
+        observations = str(request.form['observations'])
         expense.observations = observations if observations else expense.observations
         db.session.commit()
         # Volver al inicio

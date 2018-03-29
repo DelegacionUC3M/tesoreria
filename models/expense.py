@@ -9,7 +9,7 @@ class Expense(db.Model):
     expense_date = db.Column(db.DateTime, nullable=False)
     register_date = db.Column(db.DateTime)
     add_date = db.Column(db.DateTime, nullable=False)
-    amount = db.Column(db.Integer, nullable=False)
+    amount = db.Column(db.Float, nullable=False)
     rate = db.Column(db.Integer, nullable=False)
     revoked = db.Column(db.Boolean, nullable=False)
     invoices = db.relationship('Invoice', backref='expense', lazy='dynamic')

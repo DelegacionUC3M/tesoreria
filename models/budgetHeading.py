@@ -5,7 +5,7 @@ class BudgetHeading(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     budget_id = db.Column(db.Integer, db.ForeignKey('budget.id'))
     name = db.Column(db.String(255), nullable=False)
-    initial_amount = db.Column(db.Integer, nullable=False)
+    initial_amount = db.Column(db.Float, nullable=False)
     expenses = db.relationship('Expense', backref='budgetHeading', lazy='dynamic')
 
     def __init__(self, budget_id, name, initial_amount, expenses=[]):
