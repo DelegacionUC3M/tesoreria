@@ -11,7 +11,7 @@
     <form action="{{ request.path }}" method="POST">
 
     Cantidad:
-	<input type="number" name="amount" required="true" placeholder="Cantidad a transferir">
+	<input type="number" name="amount" min="0" required="true" placeholder="Cantidad a transferir">
 
 	Transferir de:
 	<select name='from_heading'>

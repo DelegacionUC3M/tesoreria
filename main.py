@@ -123,20 +123,9 @@ def budget_show(id):
     Muestra las partidas del presupuesto y permite añadir gastos y partidas
     """
     res = requests.get(url_api)
-    schools = res.json()
     budget=Budget.query.get(id)
-    # JSON utilizado para almacenar los gastos de todas las partidas
-    total_expenses = '['
-    for index, heading in enumerate(budget.budget_headings):
-        total_expenses += json.dumps({ "key": index, "amount": sum(gasto.amount for gasto in heading.expenses)})
-        total_expenses += ','
-    total_expenses = total_expenses[:-1]
-    total_expenses += ']'    
-    print(str(total_expenses))
     return render_template("budget_show.html",
-                           schools=schools,
                            headings=budget.budget_headings,
-                           expenses=total_expenses,
                            budget=budget)
     
 
@@ -214,30 +203,42 @@ def budget_heading_transfer(id):
         from_heading_id = int(request.form.get('from_heading'))
         to_heading_id = int(request.form.get('to_heading'))
         from_heading = BudgetHeading.query.get(from_heading_id)
-        # Gastos acumulados en la partida que se transfiere
-        gastos_from_heading = sum(gasto.amount for gasto in from_heading.expenses)
-        # Se intenta transferir mas dinero del que hay en la partida inicialmente
-        # O mas dinero del que hay actualmente
-        if amount > from_heading.initial_amount or amount > (from_heading.initial_amount - gastos_from_heading):
-            error = "No se puede transferir tanto dinero"
-            publics=Budget.query.filter_by(public=True)
-            privates=Budget.query.filter_by(public=False, school=2)
-            return render_template("index.html", 
-                                   public_budgets=publics,
-                                   private_budgets=privates,
-                                   error=error) 
-        else:
-            # Actualizamos las cantidades iniciales
-            to_heading = BudgetHeading.query.get(to_heading_id)
-            from_heading.initial_amount -= amount
-            to_heading.initial_amount += amount
-            db.session.commit()
-            # Volvemos al inicio
-            publics=Budget.query.filter_by(public=True)
-            privates=Budget.query.filter_by(public=False, school=2)
-            return render_template("index.html", 
-                                   public_budgets=publics,
-                                   private_budgets=privates)
+        to_heading = BudgetHeading.query.get(to_heading_id)
+
+        # Gasto creado en la partida deudora
+        # Todas las fechas del gasto se ponen al dia en el que se hace la transferencia
+        from_expense = Expense(from_heading_id,
+                               "Transferencia",
+                               budget.school,
+                               amount,
+                               datetime.datetime.utcnow(),
+                               datetime.datetime.utcnow(),
+                               False,  # Revoked, por ahora es falso
+                               datetime.datetime.utcnow(),
+                               [],
+                               "Transferencia a " + to_heading.name)
+
+        # Ingreso creado en la partida adeudada
+        to_expense = Expense(to_heading_id,
+                             "Transferencia",
+                             budget.school,
+                             -amount,
+                             datetime.datetime.utcnow(),
+                             datetime.datetime.utcnow(),
+                             False,  # Revoked, por ahora es falso
+                             datetime.datetime.utcnow(),
+                             [],
+                             "Recibido de " + from_heading.name)
+
+        db.session.add(from_expense)
+        db.session.add(to_expense)
+        db.session.commit()
+        # Volvemos al inicio
+        publics=Budget.query.filter_by(public=True)
+        privates=Budget.query.filter_by(public=False, school=2)
+        return render_template("index.html", 
+                               public_budgets=publics,
+                               private_budgets=privates)
 
 
 @app.route('/gastos/crear/<int:id>', methods=["GET", "POST"])
@@ -287,7 +288,7 @@ def expense_create(id):
 @app.route('/gastos/<int:id>', methods=["GET", "POST"])
 def expense_show(id):
     """
-    TODO: Obtener todos los gastos disponibles
+    Muestra los gastos de una partida
     """
     heading = BudgetHeading.query.get(id)
     expenses = Expense.query.filter_by(budgetheading_id=id)
@@ -301,7 +302,7 @@ def expense_show(id):
 @app.route('/gastos/editar/<int:id>', methods=["GET", "POST"])
 def expense_edit(id):
     """
-    TODO: Editar solo las observaciones de los gastos 
+    Edita las observaciones de un gasto
     """
     # Obtiene el gasto de la base de datos
     expense = expense.query.get(id)
@@ -312,8 +313,8 @@ def expense_edit(id):
                                budget=expense,
                                id=id)
     else:
-        nombre = request.form['name']
-        heading.name = nombre if nombre else heading.name
+        observations = request.form['observations']
+        expense.observations = observations if observations else expense.observations
         db.session.commit()
         # Volver al inicio
         publics=Budget.query.filter_by(public=True)
