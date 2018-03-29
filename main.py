@@ -174,13 +174,6 @@ def budget_heading_create(id):
                                    error=error) 
 
 
-@app.route('/partidas/<int:id>', methods=["GET", "POST"])
-def budget_heading_list(id):
-    """
-    Muestra las partidas de un presupuesto
-    """
-
-
 @app.route('/partidas/editar/<int:id>', methods=["GET", "POST"])
 def budget_heading_edit(id):
     """
@@ -197,6 +190,7 @@ def budget_heading_transfer(id):
         return render_template("budget_heading_transfer.html",
                                headings=budget.budget_headings)
     else:
+        # TODO: Crear gasto en la deudora e ingreso en la adeudada en vez de cambiar la cantidad inicial
         amount = int(request.form['amount'])
         from_heading_id = int(request.form.get('from_heading'))
         to_heading_id = int(request.form.get('to_heading'))
@@ -243,7 +237,7 @@ def expense_create(id):
                                budget=budget)
 
     else:
-        amount = int(request.form['amount'])
+        amount = - int(request.form['amount'])
         name = str(request.form['name'])
         budget_heading_id = int(request.form.get("budget_heading"))
         register_date = request.form['register_date']
@@ -261,14 +255,14 @@ def expense_create(id):
                           register_date,
                           [],
                           "")# Observaciones en caso de haber
+        print(amount)
         db.session.add(expense)
         db.session.commit()
         publics=Budget.query.filter_by(public=True)
         privates=Budget.query.filter_by(public=False, school=2)
         return render_template("index.html", 
                                public_budgets=publics,
-                               private_budgets=privates,
-                               error=error) 
+                               private_budgets=privates)
 
 
 @app.route('/gastos', methods=["GET", "POST"])
@@ -283,6 +277,14 @@ def get_expenses():
         return render_template("expense_list.html",
                                expenses=expenses,
                                schools=schools)
+
+
+@app.route('/gastos/editar/<int:id>', methods=["GET", "POST"])
+def expense_edit(id):
+    """
+    TODO: Editar solo las observaciones de los gastos 
+    """
+    print("WIP")
 
 
 @app.route('/estadisticas', methods=['GET'])
