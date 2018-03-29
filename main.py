@@ -179,6 +179,25 @@ def budget_heading_edit(id):
     """
     Edita una partida
     """
+    # Obtiene la partida de la base de datos
+    heading = BudgetHeading.query.get(id)
+    if request.method == "GET":
+        res = requests.get(url_api)
+        school = res.json()
+        return render_template("budget_edit.html",
+                               budget=heading,
+                               id=id)
+    else:
+        nombre = request.form['name']
+        heading.name = nombre if nombre else heading.name
+        db.session.commit()
+        # Volver al inicio
+        publics=Budget.query.filter_by(public=True)
+        privates=Budget.query.filter_by(public=False, school=2)
+        return render_template("index.html", 
+                               public_budgets=publics, 
+                               private_budgets=privates) 
+
 
 @app.route('/partidas/transferir/<int:id>', methods=["GET", "POST"])
 def budget_heading_transfer(id):
@@ -265,18 +284,18 @@ def expense_create(id):
                                private_budgets=privates)
 
 
-@app.route('/gastos', methods=["GET", "POST"])
-def get_expenses():
+@app.route('/gastos/<int:id>', methods=["GET", "POST"])
+def expense_show(id):
     """
     TODO: Obtener todos los gastos disponibles
     """
+    heading = BudgetHeading.query.get(id)
+    expenses = Expense.query.filter_by(budgetheading_id=id)
     if request.method == "GET":
         res = requests.get(url_api)
         schools = res.json()
-        expenses = Expense.query.all()
         return render_template("expense_list.html",
-                               expenses=expenses,
-                               schools=schools)
+                               expenses=expenses)
 
 
 @app.route('/gastos/editar/<int:id>', methods=["GET", "POST"])
@@ -284,8 +303,24 @@ def expense_edit(id):
     """
     TODO: Editar solo las observaciones de los gastos 
     """
-    print("WIP")
-
+    # Obtiene el gasto de la base de datos
+    expense = expense.query.get(id)
+    if request.method == "GET":
+        res = requests.get(url_api)
+        school = res.json()
+        return render_template("budget_edit.html",
+                               budget=expense,
+                               id=id)
+    else:
+        nombre = request.form['name']
+        heading.name = nombre if nombre else heading.name
+        db.session.commit()
+        # Volver al inicio
+        publics=Budget.query.filter_by(public=True)
+        privates=Budget.query.filter_by(public=False, school=2)
+        return render_template("index.html", 
+                               public_budgets=publics, 
+                               private_budgets=privates) 
 
 @app.route('/estadisticas', methods=['GET'])
 def get_statistics():

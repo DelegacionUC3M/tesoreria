@@ -16,7 +16,9 @@
 
     {% for heading in headings %}
     <div>
-        {{ heading.name }}<br>
+        {{ heading.name }}
+        <a href="{{ url_for('expense_show',id=heading.id) }}">Mostrar Gastos</a>
+        <a href="{{ url_for('budget_heading_edit',id=heading.id) }}">Edit</a><br>
         Cantidad Inicial: {{ heading.initial_amount }}
         Gastos: 
         Balance:

@@ -2,29 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Editar presupuesto</title>
+    <title>Mostrar gastos</title>
 </head>
-
-<form method='post' action='/presupuesto/crear'>
-<label for='name'>Name</label>
-<input type='text' name='name' id='name' value='{{budget.name}}'/>
-<label for='school'>School</label>
-<select name='school' id='school'>
-    {% for school in schools %}
-        <option value='{{school.id_school}}'>{{school.name}}</option>
+<body>
+    <a href="{{ url_for('index') }}">Inicio</a><br>
+    {% for expense in expenses %}
+        <div>
+            Nombre: {{ expense.name }}<br>
+            Cantidad : {{ expense.amount }}<br>
+            Fecha de registro : {{ expense.add_date }}<br>
+            Fecha del gasto : {{ expense.expense_date }}<br>
+            Fecha de presentacion : {{ expense.register_date }}<br>
+            Observaciones : {{ expense.observations }}<br>
+        </div>
     {% endfor %}
-</select>
+    
+</body>
 
-<script type="text/javascript">
-    function setSelectValue () {
-    document.getElementById('school').options.selectedIndex = {{budget.school}}-1;
-    document.getElementById('public').checked = {{public}};
-    }
-    window.onload = setSelectValue;
-</script>
-
-<label>
-    <input type='checkbox' name='public' id='public'> Public
-</label>
-<button type='submit'>Guardar</button>
-</form>

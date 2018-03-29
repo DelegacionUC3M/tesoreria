@@ -7,10 +7,27 @@
 <body>
     
 <form action="{{ request.path }}" method="POST">
-Nombre:
-<input type='text' name='name' id='name' value='{{budget.name}}'>
+<a href="{{ url_for('index') }}">Inicio</a><br>
 
+Nombre:
+<input type='text' name='name' value='{{ budget.name }}'>
+
+{% if budget.amount %}
+Cantidad: {{ budget.amount }}
+{% endif %}
+
+{% if budget.amount %}
+Observaciones:
+<input type='text' name='observations' value='{{ budget.name }}'>
+{% endif %}
+
+{% if school %}
 Universidad: {{ school.name }}
+{% endif %}
+
+{% if budget.initial_amount %}
+Cantidad Inicial: {{ budget.initial_amount }}
+{% endif %}
 
 <input type='submit' value="Guardar">
 </form>
