@@ -7,6 +7,7 @@
 
 <body>
     <a href="{{ url_for('index') }}">Inicio</a>
+    <a href="{{ url_for('budget_heading_transfer',id=budget.id) }}">Transferir</a>
     <div>
         {{ budget.name }} 
         <a href="{{ url_for('budget_heading_create', id=budget.id) }}">Partida<a>
@@ -17,12 +18,8 @@
     <div>
         {{ heading.name }}
         Cantidad Inicial: {{ heading.initial_amount }}
-
-        {% for gasto in heading.expenses %}
-            {{ sum }}
-            {% set sum = sum + gasto.amount %}
-        {% endfor %}
-        Gastos: {{ sum }}
+        Gastos: 
+       
     </div>
     {% endfor %}
 

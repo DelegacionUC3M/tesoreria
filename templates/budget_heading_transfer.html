@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Transferir partidas</title>
+</head>
+
+<body>
+	<a href="{{ url_for('index') }}">Inicio</a>
+
+    <form action="{{ request.path }}" method="POST">
+
+    Cantidad:
+	<input type="number" name="amount" required="true" placeholder="Cantidad a transferir">
+
+	Transferir de:
+	<select name='from_heading'>
+		{% for heading in headings %}
+        <option value='{{ heading.id }}' required="true">{{ heading.name }}</option>
+		{% endfor %}
+	</select>
+
+	Transferir a:
+	<select name='to_heading'>
+		{% for heading in headings %}
+        <option value='{{ heading.id }}' required="true">{{ heading.name }}</option>
+		{% endfor %}
+	</select>
+
+	<input type='submit' value="Guardar">
+    </form>
+</body>
+</html>
