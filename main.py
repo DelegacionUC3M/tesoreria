@@ -49,11 +49,11 @@ def budget_create():
 
     else:
         name = str(request.form['name'])
-        school = request.form.get('school')
+        school = int(request.form.get('school'))
         public = True if request.form.getlist('publico') else False
 
         # Si el presupuesto no existe se crea
-        if not Budget.query.filter_by(name=name, school=school):
+        if Budget.query.filter_by(name=name, school=school).count() == 0:
             presupuesto = Budget(name,
                                  school,
                                  False,  # Por ahora la visibilidad esta desactivada
@@ -152,7 +152,7 @@ def budget_heading_create(id):
         name = request.form['name']
         amount = request.form["initial_amount"]
         # Si la partida no existe se crea
-        if not BudgetHeading.query.filter_by(name=name, initial_amount=amount):
+        if BudgetHeading.query.filter_by(name=name, initial_amount=amount).count() == 0:
             heading = BudgetHeading(id,
                                     name,
                                     amount)
