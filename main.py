@@ -20,6 +20,7 @@ db.create_all()
 
 url_api = 'https://delegacion.uc3m.es/dele_api/school'
 
+# TODO: Añadir permisos a las distintas funcionalidades
 
 @app.route('/', methods=["GET", "POST"])
 
@@ -32,7 +33,7 @@ def index():
     """
     if request.method == "GET":
         publics = Budget.query.filter_by(public=True)
-        privates = Budget.query.filter_by(public=False, school=2)
+        privates = Budget.query.filter_by(public=False)
         return render_template("index.html", public_budgets=publics, private_budgets=privates) 
 
 
@@ -45,17 +46,14 @@ def budget_create():
     if request.method == "GET":
         res = requests.get(url_api)
         schools = res.json()
-        return render_template("budget_create.html", schools=schools)
+        return render_template("budget_create.html")
 
     else:
         name = str(request.form['name'])
-        school = float(request.form.get('school'))
-        public = True if request.form.getlist('publico') else False
 
         # Si el presupuesto no existe se crea
         if Budget.query.filter_by(name=name, school=school).count() == 0:
             presupuesto = Budget(name,
-                                 school,
                                  False,  # Por ahora la visibilidad esta desactivada
                                  public,
                                  [])
@@ -63,14 +61,14 @@ def budget_create():
             db.session.commit()
             # Volver al inicio
             publics=Budget.query.filter_by(public=True)
-            privates=Budget.query.filter_by(public=False, school=2)
-            return render_template( "index.html", public_budgets=publics, private_budgets=privates) 
+            privates=Budget.query.filter_by(public=False)
+            return render_template( "index.html", public_budgets=publics, private_budgets=privates ) 
         # El presupuesto ya existe
         else:
             # Volver al inicio
             error = "El presupuesto creado ya existe"
             publics=Budget.query.filter_by(public=True)
-            privates=Budget.query.filter_by(public=False, school=2)
+            privates=Budget.query.filter_by(public=False)
             return render_template( "index.html", public_budgets=publics, private_budgets=privates, error=error) 
 
 
@@ -86,7 +84,6 @@ def budget_edit(id):
         school = res.json()
         return render_template("budget_edit.html",
                                budget=budget,
-                               school=school[1],
                                id=id)
 
     else:
@@ -95,7 +92,7 @@ def budget_edit(id):
         db.session.commit()
         # Volver al inicio
         publics=Budget.query.filter_by(public=True)
-        privates=Budget.query.filter_by(public=False, school=2)
+        privates=Budget.query.filter_by(public=False)
         return render_template( "index.html", public_budgets=publics, private_budgets=privates) 
 
 
@@ -109,11 +106,10 @@ def budget_list():
         res = requests.get(url_api)
         schools = res.json()
         publics=Budget.query.filter_by(public=True)
-        privates=Budget.query.filter_by(public=False, school=2)
+        privates=Budget.query.filter_by(public=False)
         return render_template("budget_list.html",
                                public_budgets=publics,
-                               private_budgets=privates,
-                               schools=schools)
+                               private_budgets=privates)
 
 
 @app.route('/presupuestos/<int:id>', methods=["GET"])
@@ -155,7 +151,7 @@ def budget_heading_create(id):
             db.session.add(heading)
             db.session.commit()
             publics=Budget.query.filter_by(public=True)
-            privates=Budget.query.filter_by(public=False, school=2)
+            privates=Budget.query.filter_by(public=False)
             return render_template("index.html", 
                                    public_budgets=publics,
                                    private_budgets=privates) 
@@ -163,7 +159,7 @@ def budget_heading_create(id):
         else:
             error = "La partida creada ya existe"
             publics=Budget.query.filter_by(public=True)
-            privates=Budget.query.filter_by(public=False, school=2)
+            privates=Budget.query.filter_by(public=False)
             return render_template("index.html", 
                                    public_budgets=publics,
                                    private_budgets=privates,
@@ -189,7 +185,7 @@ def budget_heading_edit(id):
         db.session.commit()
         # Volver al inicio
         publics=Budget.query.filter_by(public=True)
-        privates=Budget.query.filter_by(public=False, school=2)
+        privates=Budget.query.filter_by(public=False)
         return render_template("index.html", 
                                public_budgets=publics, 
                                private_budgets=privates) 
@@ -241,7 +237,7 @@ def budget_heading_transfer(id):
         db.session.commit()
         # Volvemos al inicio
         publics=Budget.query.filter_by(public=True)
-        privates=Budget.query.filter_by(public=False, school=2)
+        privates=Budget.query.filter_by(public=False)
         return render_template("index.html", 
                                public_budgets=publics,
                                private_budgets=privates)
@@ -284,7 +280,7 @@ def expense_create(id):
         db.session.add(expense)
         db.session.commit()
         publics=Budget.query.filter_by(public=True)
-        privates=Budget.query.filter_by(public=False, school=2)
+        privates=Budget.query.filter_by(public=False)
         return render_template("index.html", 
                                public_budgets=publics,
                                private_budgets=privates)
@@ -323,7 +319,7 @@ def expense_edit(id):
         db.session.commit()
         # Volver al inicio
         publics=Budget.query.filter_by(public=True)
-        privates=Budget.query.filter_by(public=False, school=2)
+        privates=Budget.query.filter_by(public=False)
         return render_template("index.html", 
                                public_budgets=publics, 
                                private_budgets=privates) 

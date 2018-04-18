@@ -15,4 +15,7 @@ class BudgetHeading(db.Model):
         self.expenses = expenses
 
     def __repr__(self):
-        return str({'id': self.id, 'name': self.name, 'initial_amoumt': self.initial_amout, 'expenses': self.expenses})
+        return str({'id': self.id,
+                    'name': self.name,
+                    'initial_amoumt': self.initial_amout,
+                    'expenses': self.expenses})
